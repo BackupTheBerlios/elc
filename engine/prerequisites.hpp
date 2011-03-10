@@ -12,7 +12,7 @@
 #error	"Including C++ header in C translation unit!"
 #endif	/* __cplusplus */
 
-#include "../platform.h"
+//#include "../platform.h"
 
 #define BOOST_FILESYSTEM_VERSION 2
 #define BOOST_THREAD_USE_LIB
@@ -20,8 +20,8 @@
 #include <string>
 #include <limits>
 #include <bitset>
+#include <iostream>
 #include <boost/array.hpp>
-#include <boost/assign.hpp>
 #include <boost/cast.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/foreach.hpp>
@@ -30,6 +30,12 @@
 #include <boost/smart_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <cmath>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtx/string_cast.hpp>
+#include <vector>
+#include <stack>
 
 namespace eternal_lands
 {
@@ -43,18 +49,37 @@ namespace eternal_lands
 	typedef boost::int32_t Sint32;
 	typedef boost::int64_t Sint64;
 
-	#define SHARED_PTR(type) typedef boost::shared_ptr<type> type##SharedPtr
-	#define VECTOR(type) typedef std::vector<type> type##Vector
+	#define SHARED_PTR_NAME(type, name) typedef boost::shared_ptr<type> name##SharedPtr
+	#define ARRAY_NAME(type, N, name) typedef boost::array<type, N> name##Array##N
+	#define VECTOR_NAME(type, name) typedef std::vector<type> name##Vector
+
+	#define SHARED_PTR(type) SHARED_PTR_NAME(type, type)
+	#define ARRAY(type, N) ARRAY_NAME(type, N, type)
+	#define VECTOR(type) VECTOR_NAME(type, type)
+
+	ARRAY_NAME(float, 6, Float);
 
 	typedef std::string String;
+	typedef std::bitset<32> _32BitSet;
 
+	class BoundedObject;
 	class HardwareBuffer;
+	class RStarTree;
+	class RStarTreeNode;
 	class VertexElement;
 	class VertexStreamDescription;
+
+	typedef BoundedObject* BoundedObjectPtr;
+	typedef RStarTree* RStarTreePtr;
+	typedef RStarTreeNode* RStarTreeNodePtr;
+
+	typedef std::stack<RStarTreeNodePtr> RStarTreeNodePtrStack;
 
 	SHARED_PTR(HardwareBuffer);
 
 	VECTOR(VertexElement);
+	VECTOR(BoundedObjectPtr);
+	VECTOR(RStarTreeNodePtr);
 
 }
 
