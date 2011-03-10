@@ -40,6 +40,7 @@ float minimap_tiles_distance = 48;
 float radius_shift = 0.707106779283f;
 int rotate_minimap = 1;
 int pin_minimap = 0;
+int open_minimap_on_start = 0;
 
 static int enable_controls = 0;
 
@@ -62,7 +63,7 @@ static __inline__ float minimap_get_zoom ()
 	return zoom;
 }
 
-__inline__ void rotate_actor_points(float zoom_multip, float px, float py)
+static __inline__ void rotate_actor_points(float zoom_multip, float px, float py)
 {
 	float x,y;
 	x = (px - (float_minimap_size/2) ) + float_minimap_size/2;
@@ -80,7 +81,7 @@ __inline__ void rotate_actor_points(float zoom_multip, float px, float py)
 	glTranslatef(-x,-y,0.0f);
 }
 
-__inline__ void rotate_at_player(float zoom_multip, float px, float py)
+static __inline__ void rotate_at_player(float zoom_multip, float px, float py)
 {
 	float x,y;
 	x = (px - (float_minimap_size/2) );
@@ -96,7 +97,7 @@ __inline__ void rotate_at_player(float zoom_multip, float px, float py)
 	glTranslatef(-x,-y,0.0f);
 }
 
-__inline__ void rotate_click_coords(float * x,float * y)
+static __inline__ void rotate_click_coords(float * x,float * y)
 {
 	if(rotate_minimap)
 	{
@@ -109,7 +110,7 @@ __inline__ void rotate_click_coords(float * x,float * y)
 	}
 }
 
-__inline__ int is_within_radius(float mx, float my,float px,float py,float radius)
+static __inline__ int is_within_radius(float mx, float my,float px,float py,float radius)
 {
 	float distance;
 
@@ -879,6 +880,7 @@ void display_minimap()
 		cm_add_region(win->cm_id, minimap_win, win->len_x/2-32, 0, 64, ELW_TITLE_HEIGHT );
 		cm_bool_line(win->cm_id, ELW_CM_MENU_LEN+1, &rotate_minimap, "rotate_minimap");
 		cm_bool_line(win->cm_id, ELW_CM_MENU_LEN+2, &pin_minimap, "pin_minimap");
+		cm_bool_line(win->cm_id, ELW_CM_MENU_LEN+3, &open_minimap_on_start, NULL);
 	} else {
 		show_window(minimap_win);
 		select_window(minimap_win);

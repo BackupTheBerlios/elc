@@ -339,6 +339,8 @@ extern char
 		knowledge_read_book[15],
 		unknown_book_short_str[50],
 		unknown_book_long_str[150],
+		know_highlight_prompt_str[20],
+		know_highlight_cm_str[50],
 		/*manufacture.c*/
 		mix_str[5],
 		mixall_str[10],
@@ -438,7 +440,7 @@ extern char
 		cm_help_options_str[50],
 		cm_npcname_menu_str[50],
 		cm_dialog_copy_menu_str[50],
-		cm_minimap_menu_str[50],
+		cm_minimap_menu_str[60],
 		cm_user_menu_str[150],
 		/* user_menus.cpp */
 		um_invalid_command_str[50],

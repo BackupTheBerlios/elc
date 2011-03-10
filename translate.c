@@ -197,6 +197,8 @@ char
 	knowledge_read_book[15],
 	unknown_book_short_str[50],
 	unknown_book_long_str[150],
+	know_highlight_prompt_str[20],
+	know_highlight_cm_str[50],
 	/*manufacture.c*/
 	mix_str[5],
 	mixall_str[10],
@@ -289,8 +291,8 @@ char
 	cm_counters_menu_str[75],
 	cm_help_options_str[50],
 	cm_npcname_menu_str[50],
-	cm_dialog_copy_menu_str[50],	
-	cm_minimap_menu_str[50],
+	cm_dialog_copy_menu_str[50],
+	cm_minimap_menu_str[60],
 	cm_user_menu_str[150],
 	cm_item_list_menu_str[100],
 	cm_item_list_empty_str[15],
@@ -1207,6 +1209,8 @@ void init_help()
 	add_xml_identifier(misc,"read_book",knowledge_read_book,"Read Book",sizeof(knowledge_read_book));
 	add_xml_identifier(misc,"unknown_book_s",unknown_book_short_str,"(Not yet known to client)",sizeof(unknown_book_short_str));
 	add_xml_identifier(misc,"unknown_book_l",unknown_book_long_str,"Researching book not yet known to the client.  Don't worry, reading it will count!",sizeof(unknown_book_long_str));
+	add_xml_identifier(misc,"know_highlight_prompt",know_highlight_prompt_str,"Highlight Text",sizeof(know_highlight_prompt_str));
+	add_xml_identifier(misc,"know_highlight_cm",know_highlight_cm_str,"Set Highlight Text\nClear Highlight",sizeof(know_highlight_cm_str));
 	add_xml_identifier(misc,"mix",mix_str,"Mix",sizeof(mix_str));
 	add_xml_identifier(misc,"mix_all",mixall_str,"Mix all",sizeof(mixall_str));
 	add_xml_identifier(misc,"clear",clear_str,"Clear",sizeof(clear_str));
@@ -1387,8 +1391,8 @@ void init_help()
 	add_xml_identifier(misc, "cm_counters_menu", cm_counters_menu_str, "Delete entry\n--\nReset Session Total\n--\nEnable floating messages", sizeof(cm_counters_menu_str));	
 	add_xml_identifier(misc, "cm_help_options", cm_help_options_str, "Right-click for options", sizeof(cm_help_options_str));
 	add_xml_identifier(misc, "cm_npcname_menu", cm_npcname_menu_str, "Copy NPC Name", sizeof(cm_npcname_menu_str));
-	add_xml_identifier(misc, "cm_dialog_copy_menu", cm_dialog_copy_menu_str, "Exclude Responses", sizeof(cm_dialog_copy_menu_str));
-	add_xml_identifier(misc, "cm_minimap_menu", cm_minimap_menu_str, "--\nRotate Minimap\nPin Minimap", sizeof(cm_minimap_menu_str));
+	add_xml_identifier(misc, "cm_dialog_copy_menu", cm_dialog_copy_menu_str, "Exclude Responses\nRemove newlines", sizeof(cm_dialog_copy_menu_str));
+	add_xml_identifier(misc, "cm_minimap_menu", cm_minimap_menu_str, "--\nRotate Minimap\nPin Minimap\nOpen On Start", sizeof(cm_minimap_menu_str));
 	add_xml_identifier(misc, "cm_user_menu", cm_user_menu_str, "--\nShow Title\nDraw Border\nSmall Font\nStandard Menus\n--\nShow Commands\n--\nReload Menus\nDisable Menus", sizeof(cm_user_menu_str));
 	add_xml_identifier(misc, "cm_item_list_menu", cm_item_list_menu_str, "Save a new list\nDisable list preview\n--\nDelete a list\n--\nReload item lists file", sizeof(cm_item_list_menu_str));
 	add_xml_identifier(misc, "cm_item_list_empty", cm_item_list_empty_str, "Empty", sizeof(cm_item_list_empty_str));
