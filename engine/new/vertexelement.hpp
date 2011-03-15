@@ -32,10 +32,10 @@ namespace eternal_lands
 		vst_normal = 1,
 		vst_tangent = 2,
 		vst_color = 3,
-		vst_secondary_color = 4,
-		vst_scale_direction = 5,
-		vst_bone_weight = 6,
-		vst_bone_index = 7,
+		vst_bone_weight = 4,
+		vst_bone_index = 5,
+		vst_extra_bone_weight = 6
+		vst_extra_bone_index = 7,
 		vst_texture_coordinate_0 = 8,
 		vst_texture_coordinate_1 = 9,
 		vst_texture_coordinate_2 = 10,
@@ -142,6 +142,13 @@ namespace eternal_lands
 			void check() const;
 
 		public:
+			/**
+			 * @brief Default constructor.
+			 * Default constructor initializes the vertex element.
+			 * @param semantic The semantic for the vertex element.
+			 * @param type The type for the vertex element.
+			 * @param normalize_integer True for normalized integers, false else.
+			 */
 			VertexElement(const VertexSemanticType semantic,
 				const VertexElementType type,
 				const bool normalize_integer = false);

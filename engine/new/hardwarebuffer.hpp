@@ -77,9 +77,9 @@ namespace eternal_lands
 	 */
 
 	/**
-	 * @brief Abstract base @c class for hardware buffers.
+	 * @brief @c class for opengl hardware buffers.
 	 *
-	 * Abstract base @c class for hardware buffers.
+	 * @c class for opengl hardware buffers.
 	 */
 	class HardwareBuffer: public boost::noncopyable
 	{
@@ -153,6 +153,9 @@ namespace eternal_lands
 			static bool unmap(const HardwareBufferType type);
 
 	};
+
+	SHARED_PTR(HardwareBuffer);
+	ARRAY(HardwareBufferSharedPtr, 4);
 
 }
 

@@ -44,10 +44,21 @@ namespace eternal_lands
 			 */
 			~VertexStreamDescription() throw();
 
+			/**
+			 * @brief Gets the vertex elements.
+			 * Sets the vertex elements for this stream. Also the size
+			 * stride is calculated for the stream.
+			 * @param vertex_elements The new vertex elements.
+			 */
 			void set_vertex_elements(
 				const VertexElementVector &vertex_elements);
 
-			inline const VertexElementVector get_vertex_elements()
+			/**
+			 * @brief Gets the vertex elements.
+			 * Returns the vertex elements for this stream.
+			 * @return The vertex elements.
+			 */
+			inline const VertexElementVector &get_vertex_elements()
 				const
 			{
 				return m_vertex_elements;

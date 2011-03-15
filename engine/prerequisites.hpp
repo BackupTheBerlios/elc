@@ -58,9 +58,11 @@ namespace eternal_lands
 	#define VECTOR(type) VECTOR_NAME(type, type)
 
 	ARRAY_NAME(float, 6, Float);
+	ARRAY(Uint16, 16);
 
 	typedef std::string String;
-	typedef std::bitset<32> _32BitSet;
+	typedef std::bitset<32> BitSet32;
+	typedef std::bitset<16> BitSet16;
 
 	class BoundedObject;
 	class HardwareBuffer;
