@@ -1302,6 +1302,7 @@ int display_game_handler (window_info *win)
 		e3d_count= e3d_total= 0;
 #endif //DEBUG
 	}
+	draw_spell_icon_strings();
 
 	CHECK_GL_ERRORS ();
 	/* Draw the chat text */
@@ -2113,8 +2114,6 @@ int text_input_handler (Uint32 key, Uint32 unikey)
 int keypress_game_handler (window_info *win, int mx, int my, Uint32 key, Uint32 unikey)
 {
 	Uint16 keysym = key & 0xffff;
-	int shift_on = key & ELW_SHIFT;
-	int ctrl_on = key & ELW_CTRL;
 
 	// first try the keypress handler for all root windows
 	if ( keypress_root_common (key, unikey) )
@@ -2171,14 +2170,6 @@ int keypress_game_handler (window_info *win, int mx, int my, Uint32 key, Uint32 
 			hide_window (game_root_win);
 			show_window (map_root_win);
 		}
-	}
-	// TEST REMOVE LATER!!!!!!!!!!!!!!!!!!!!!!
-	else if (keysym == SDLK_F7)
-	{
-		if (ctrl_on) 
-			read_local_book ("books/abc.xml\0", 22);
-		else if (shift_on)
-			read_local_book ("books/sediculos.xml\0", 22);
 	}
 	else if (keysym == SDLK_F6)
 	{
