@@ -321,6 +321,7 @@ extern char
 		mix_one_str[8],
 		mix_all_str[8],
 		auto_get_all_str[30],
+		item_list_but_str[35],
 		inv_keeprow_str[30],
 		quantity_edit_str[100],
 		equip_here_str[100],
@@ -447,6 +448,7 @@ extern char
 		/*update.c*/
 		update_complete_str[40],
 		video_restart_str[80],
+		rotate_chat_log_restart_str[80],
 		client_restart_countdown_str[40],
 		client_restarting_str[20],
 		restart_now_label[20],
