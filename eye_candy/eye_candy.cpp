@@ -1299,7 +1299,7 @@ namespace ec
 	coord_t PolarCoordElement::get_radius(const angle_t angle) const
 	{
 		const angle_t temp_cos = cos((angle + offset) * frequency);
-		coord_t ret = std::pow(fabs(temp_cos), power)
+		coord_t ret = std::pow(fabsf(temp_cos), power)
 			* scalar + scalar;
 		ret = copysign(ret, temp_cos);
 		return ret;
@@ -1338,6 +1338,12 @@ namespace ec
 
 		coord_t tempsize = base->billboard_scalar * size;
 		tempsize *= flare();
+
+		assert(std::isfinite(burn));
+		assert(std::isfinite(tempalpha));
+		assert(std::isfinite(base->billboard_scalar));
+		assert(std::isfinite(size));
+		assert(std::isfinite(tempsize));
 
 		Uint32 texture = get_texture(); // Always hires, since we're not checking distance.
 
@@ -2786,7 +2792,7 @@ namespace ec
 			for (std::vector<Effect*>::iterator iter = effects.begin(); iter != effects.end(); iter++)
 			(*iter)->request_LOD(change_LOD);
 
-			const float particle_cleanout_rate = (1.0 - std::pow(0.5f, 5.0 / (framerate * square(change_LOD))));
+			const float particle_cleanout_rate = (1.0 - std::pow(0.5f, 5.0f / (framerate * square(change_LOD))));
 			//  std::cout << (1.0 / particle_cleanout_rate) << std::endl;
 			float counter = randfloat();
 			for (int i = 0; i < (int)particles.size(); ) //Iterate using an int, not an iterator, because we may be adding/deleting entries, and that messes up iterators.
