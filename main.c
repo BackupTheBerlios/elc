@@ -34,7 +34,7 @@
 #include "errors.h"
 #include "events.h"
 #include "gl_init.h"
-#include "hud.h"
+#include "icon_window.h"
 #include "init.h"
 #include "item_lists.h"
 #include "interface.h"
@@ -254,7 +254,6 @@ int start_rendering()
 	unload_questlog();
 	save_item_lists();
 	free_emotes();
-	free_icons();
 	free_vars();
 	cleanup_rules();
 	save_exploration_map();
@@ -266,6 +265,7 @@ int start_rendering()
 	free_bbox_tree(main_bbox_tree);
 	main_bbox_tree = NULL;
 	free_astro_buffer();
+	free_translations();
 	/* Destroy our GL context, etc. */
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 	SDL_QuitSubSystem(SDL_INIT_TIMER);
