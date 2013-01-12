@@ -120,7 +120,7 @@ class Quest_List
 			mouseover_y(-1), clicked(false), spacer(3),
 			linesep(static_cast<int>(SMALL_FONT_Y_LEN)+2*3),
 			font_x(static_cast<int>(SMALL_FONT_X_LEN)), cm_id(CM_INIT_VALUE), 
-			no_auto_open(0), hide_completed(0), quest_completed(0), number_shown(0) {}
+			no_auto_open(0), hide_completed(0), list_left_of_entries(0), quest_completed(0), number_shown(0) {}
 		void add(Uint16 id);
 		void set_requested_title(const char* title);
 		void showall(void);
@@ -179,6 +179,7 @@ class Quest_List
 		// use logical sense so zero/false value is off
 		int no_auto_open;
 		int hide_completed;
+		int list_left_of_entries;
 		int quest_completed;
 		size_t number_shown;
 };
@@ -293,6 +294,7 @@ void Quest_List::load(void)
 	Quest showall(Quest::UNSET_ID);
 	showall.set_title(questlist_showall_str);
 	quests.insert( std::make_pair( Quest::UNSET_ID, showall) );
+	max_title = showall.get_title().size();
 
 	std::string username = std::string(username_str);
 	std::transform(username.begin(), username.end(), username.begin(), tolower);
@@ -421,6 +423,7 @@ unsigned int Quest_List::get_options(void) const
 	unsigned int options = 0;
 	options |= (no_auto_open) ?1: 0;
 	options |= ((hide_completed) ?1: 0) << 1;
+	options |= ((list_left_of_entries) ?1: 0) << 2;
 	return options;
 }
 
@@ -431,6 +434,7 @@ void Quest_List::set_options(unsigned int options)
 {
 	no_auto_open = options & 1;
 	hide_completed = (options >> 1) & 1;
+	list_left_of_entries = (options >> 2) & 1;
 }
 
 
@@ -537,7 +541,7 @@ enum {	CMQL_SHOWALL=0, CMQL_QUESTFILTER, CMQL_NPCFILTER, CMQL_NPCSHOWNONE,
 		CMQL_COPY, CMQL_COPYALL, CMQL_FIND, CMQL_ADD, CMQL_S02,
 		CMQL_SEL, CMQL_UNSEL, CMQL_SELALL, CMQL_UNSELALL, CMQL_SHOWSEL, CMQL_S03,
 		CMQL_DELETE, CMQL_UNDEL, CMQL_S04, CMQL_DEDUPE, CMQL_S05, CMQL_SAVE };
-enum {	CMQL_COMPLETED=0, CMQL_ADDSEL, CMQL_S11, CMQL_HIDECOMPLETED, CMQL_NOAUTOOPEN };
+enum {	CMQL_COMPLETED=0, CMQL_ADDSEL, CMQL_S11, CMQL_HIDECOMPLETED, CMQL_NOAUTOOPEN,  CMQL_LISTLEFTOFENTRIES };
 static std::string adding_npc;
 static size_t adding_insert_pos = 0;
 static bool prompt_for_add_text = false;
@@ -642,8 +646,16 @@ void Quest_Entry::set_lines(const std::string & the_text)
 			last_space = i;
 		if (col >= chars_per_line)
 		{
-			lines.push_back(text.substr(start, last_space-start));
-			start = last_space+1;
+			if (last_space<=start)
+			{
+				lines.push_back(text.substr(start, chars_per_line));
+				start += chars_per_line;
+			}
+			else
+			{
+				lines.push_back(text.substr(start, last_space-start));
+				start = last_space+1;
+			}
 			col = i - start;
 		}
 		col++;
@@ -1242,9 +1254,23 @@ void Quest_List::open_window(void)
 	if (win_id < 0)
 	{
 		window_info *win = &windows_list.window[questlog_win];
-		const int size_x = font_x*40+ELW_BOX_SIZE+4*spacer;
-		const int size_y = 5*linesep;
-		win_id = create_window(questlist_filter_title_str, questlog_win, 0, (win->len_x-size_x)/2, static_cast<int>(win->len_y+SMALL_FONT_Y_LEN+10+ELW_TITLE_HEIGHT), size_x, size_y, ELW_WIN_DEFAULT|ELW_RESIZEABLE);
+		const int min_size_x = font_x*15+ELW_BOX_SIZE+4*spacer;
+		const int min_size_y = 5*linesep;
+		const int size_x = font_x*get_max_title()+ELW_BOX_SIZE+4*spacer;
+		int size_y, pos_x, pos_y;
+		if (list_left_of_entries)
+		{
+			pos_x = -(size_x + 10);
+			pos_y = 0; 
+			size_y = linesep * static_cast<int>(win->len_y / linesep);
+		}
+		else
+		{
+			pos_x = (win->len_x-size_x)/2;
+			pos_y = static_cast<int>(win->len_y+SMALL_FONT_Y_LEN+10+ELW_TITLE_HEIGHT);
+			size_y = min_size_y;
+		}
+		win_id = create_window(questlist_filter_title_str, questlog_win, 0, pos_x, pos_y, size_x, size_y, ELW_WIN_DEFAULT|ELW_RESIZEABLE);
 		set_window_handler(win_id, ELW_HANDLER_DISPLAY, (int (*)())&display_questlist_handler );
 		set_window_handler(win_id, ELW_HANDLER_CLICK, (int (*)())&click_questlist_handler );
 		set_window_handler(win_id, ELW_HANDLER_MOUSEOVER, (int (*)())&mouseover_questlist_handler );
@@ -1252,7 +1278,7 @@ void Quest_List::open_window(void)
 		scroll_id = vscrollbar_add_extended(win_id, scroll_id, NULL, 
 			size_x-ELW_BOX_SIZE, ELW_BOX_SIZE, ELW_BOX_SIZE, size_y-2*ELW_BOX_SIZE, 0,
 			1.0, 0.77f, 0.57f, 0.39f, 0, 1, quests.size()-1);
-		set_window_min_size(win_id, size_x, size_y);
+		set_window_min_size(win_id, min_size_x, min_size_y);
 
 		cm_id = cm_create(cm_questlist_menu_str, cm_questlist_handler);
 		cm_set_pre_show_handler(cm_id, cm_questlist_pre_show_handler);
@@ -1261,6 +1287,7 @@ void Quest_List::open_window(void)
 		cm_bool_line(cm_id, CMQL_COMPLETED, &quest_completed, NULL);
 		cm_bool_line(cm_id, CMQL_NOAUTOOPEN, &no_auto_open, NULL);
 		cm_bool_line(cm_id, CMQL_HIDECOMPLETED, &hide_completed, NULL);
+		cm_bool_line(cm_id, CMQL_LISTLEFTOFENTRIES, &list_left_of_entries, NULL);
 	}
 	else
 		show_window(win_id);
@@ -1350,7 +1377,7 @@ static void questlog_add_text_input(window_info *win)
 {
 	prompt_for_add_text = false;
 	close_ipu(&ipu_questlog);
-	init_ipu(&ipu_questlog, questlog_win, 400, -1, 256, 5, questlog_input_cancel_handler, questlog_add_text_input_handler);
+	init_ipu(&ipu_questlog, questlog_win, 400, -1, 1024, 5, questlog_input_cancel_handler, questlog_add_text_input_handler);
 	ipu_questlog.x = (win->len_x - ipu_questlog.popup_x_len) / 2;
 	ipu_questlog.y = (win->len_y - ipu_questlog.popup_y_len) / 2;
 	ipu_questlog.allow_nonprint_chars = 1;
