@@ -2,8 +2,8 @@
 	Log trades.
 
 	If enabled, logs all successful trades.  Any time you fully "Accept", the
-	items are recorded.  Only after GET_TRADE_EXIT, HERE_YOUT_INVENTORY and
-	STORAGE_ITEMS is the trade confirmed and the log entry written.
+	items are recorded.  Only after GET_TRADE_EXIT and STORAGE_ITEMS is
+	the trade confirmed and the log entry written.
 
 	Author bluap/pjbroad February 2013
 */
@@ -64,7 +64,7 @@ namespace Trade_Log
 		for(size_t i=0;i<size;i++)
 			if (the_stuff[i].quantity > 0)
 			{
-				// if we have a description, and it is unique use it
+				// if we have a description, and it is unique, use it
 				if (get_item_count(the_stuff[i].id, the_stuff[i].image_id)==1)
 					out <<
 						" " << the_stuff[i].quantity <<
@@ -166,10 +166,12 @@ static Trade_Log::State the_log;
 // The external interface
 extern "C"
 {
+	static int enable_local_debug = 0;
 	int enable_trade_log = 0; // The config window option to enable the trade log
 	void trade_accepted(const char *name, const trade_item *yours, const trade_item *others, int max_items)
-		{ the_log.accepted(name, yours, others, max_items); }
-	void trade_exit(void) { the_log.exit(); }
-	void trade_aborted(const char *message) { the_log.aborted(); }
-	void trade_post_storage(void) { the_log.completed(); }
+		{ if (enable_local_debug) printf("%s\n", __FUNCTION__); the_log.accepted(name, yours, others, max_items); }
+	void trade_exit(void) { if (enable_local_debug) printf("%s\n", __FUNCTION__); the_log.exit(); }
+	void trade_aborted(const char *message) { printf("%s\n", __FUNCTION__); the_log.aborted(); }
+	void trade_post_storage(void) { if (enable_local_debug) printf("%s\n", __FUNCTION__); the_log.completed(); }
+	void trade_post_inventory(void) { if (enable_local_debug) printf("%s\n", __FUNCTION__); the_log.completed(); }
 }
